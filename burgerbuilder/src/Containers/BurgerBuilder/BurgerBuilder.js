@@ -20,7 +20,12 @@ class BurgerBuilder extends Component{
 
     state = {
         
-                ingredients:null,
+                ingredients:{
+                    bacon:0,
+                    meat:0,
+                    cheese:0,
+                    salad:0
+                },
                 price:4,
                 isPurchasable:false,
                 isPurchasing:false,
@@ -30,8 +35,20 @@ class BurgerBuilder extends Component{
 
     componentDidMount() {
         axios.get("ingredients.json").then(response =>{
-            this.setState({ingredients:response.data});
-            this.updateIsPurchasable(response.data);
+            //this.setState({ingredients:response.data});
+            if(response.data != null){
+                let igKeys = Object.keys(response.data);
+                console.log(igKeys);
+                for(const igKey of igKeys){
+                       console.log("Ing keys ",igKey);
+                      this.addIngredientHandler(igKey,response.data[igKey]);  
+                }
+              //  this.updateIsPurchasable(response.data);
+            }
+            else{
+
+            }
+            
         })
         .catch(errr => {
 
@@ -59,41 +76,44 @@ class BurgerBuilder extends Component{
     setPurchaseContinueHandler = () => {
 
         this.setState({loading:true});
-
-        const order = {
-            ingredients : this.state.ingredients,
-            price:this.state.price,
-            name : "Supran",
-            address :{
-                street:"Kaspate Wasti",
-                area: "Wakad",
-                city:"Pune",
-                state:"Maharashtra",
-                country:"India"
-            }
-        }
-        axios.post("orders.json",order).then(response => {
-           this.setState({loading:false,isPurchasing:false});
-            console.log(response);
-        })
-        .catch(errr => {
-           this.setState({loading:false,isPurchasing:false});
-            console.log(errr);
-        })
+        this.props.history.push("/checkout");
+        // const order = {
+        //     ingredients : this.state.ingredients,
+        //     price:this.state.price,
+        //     name : "Supran",
+        //     address :{
+        //         street:"Kaspate Wasti",
+        //         area: "Wakad",
+        //         city:"Pune",
+        //         state:"Maharashtra",
+        //         country:"India"
+        //     }
+        // }
+        // axios.post("orders.json",order).then(response => {
+        //    this.setState({loading:false,isPurchasing:false});
+        //     //console.log(response);
+            
+        // })
+        // .catch(errr => {
+        //    this.setState({loading:false,isPurchasing:false});
+        //     console.log(errr);
+        // })
         
     }
 
-    addIngredientHandler = (type) => {
+    addIngredientHandler = (type,count=1) => {
+        console.log("Inside addIngredientHandler ",type, count);
+        if(count >= 1){
         const oldIngredientCount = this.state.ingredients[type];
-        const updateCount = oldIngredientCount+1;
+        const updateCount = oldIngredientCount+count;
         const oldPrice = this.state.price;
-        const updatedPrice = oldPrice + INGREDIENT_PRICES[type];
+        const updatedPrice = oldPrice + (count*INGREDIENT_PRICES[type]);
         const updatedIngredients = {...this.state.ingredients}
         updatedIngredients[type] = updateCount;
         console.log(updatedIngredients);
         this.setState({price:updatedPrice , ingredients:updatedIngredients});
         this.updateIsPurchasable(updatedIngredients);
-
+        }
     }   
     
     removeIngredientHandler = (type) => {
