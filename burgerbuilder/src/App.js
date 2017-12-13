@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {Route,Switch,Redirect,BrowserRouter} from 'react-router-dom';
+import {Route,Switch,BrowserRouter} from 'react-router-dom';
 import './App.css';
 import Layout from './Components/Layout/Layout';
 import BurgerBuilder from './Containers/BurgerBuilder/BurgerBuilder';
+import Orders from './Containers/Orders/Orders';
 import Checkout from './Containers/Checkout/Checkout';
 
 class App extends Component {
@@ -13,9 +14,9 @@ class App extends Component {
           <Layout>
           
             <Switch>
-              <Route path="/order" component = {BurgerBuilder} />
+              <Route path="/orders" component = {Orders} />
               <Route path="/checkout" component = {Checkout} />
-              <Redirect from ="/" exact to="/order"/>
+              <Route path="/"  component = {BurgerBuilder} />
             </Switch>
             
           
