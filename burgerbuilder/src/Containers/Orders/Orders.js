@@ -19,7 +19,7 @@ class Orders extends Component{
                 //      console.log("data",data);
                 //      return {ingredients:data.ingredients , price:data.price};
                 // })
-
+                console.log(response.data);
                 for(let key in response.data){
                     orders.push({
                         ...response.data[key],
@@ -35,12 +35,16 @@ class Orders extends Component{
 
     render(){
 
-        let orders = this.state.orders.map((order,index) =>{
-              return <Order key={order.id}  {...order} />
-        })
-
+        
+        let orders = [];
         if(this.state.loading){
             orders = <Spinner />;
+        }
+        else{
+            console.log(this.state.orders);
+            orders = this.state.orders.map((order,index) =>{
+                return <Order key={order.id}  {...order} />
+          })
         }
 
         return(

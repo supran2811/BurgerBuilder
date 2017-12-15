@@ -3,8 +3,8 @@ import React from 'react';
 import classes from './Order.css';
 
 const order = (props) => {
-
-    const ingredients = Object.keys(props.ingredients).map((igKey) =>{
+    console.log(props.ingredients);
+    const ingredients = props.ingredients? Object.keys(props.ingredients).map((igKey) =>{
         return <span 
                     key={igKey}
                     style = {{
@@ -17,7 +17,7 @@ const order = (props) => {
                     }}> 
                       {igKey + "("+props.ingredients[igKey]+")"}
                     </span>
-    })
+    }) : null;
 
     return (
     <div key={props.id} className = {classes.Order}>

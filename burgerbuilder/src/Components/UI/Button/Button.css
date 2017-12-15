@@ -7,9 +7,14 @@
     font: inherit;
     padding: 10px;
     margin: 10px;
+    text-align: center;
+    box-sizing: border-box;
     font-weight: bold;
 }
-
+.Button:disabled{
+    background-color: #dddddd;
+    cursor: not-allowed;
+}
 .Button:first-of-type {
     margin-left: 0;
     padding-left: 0;
