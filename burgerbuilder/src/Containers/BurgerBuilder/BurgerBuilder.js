@@ -18,7 +18,6 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 class BurgerBuilder extends Component{
 
     state = {
-                isPurchasable:false,
                 isPurchasing:false,
                 loading:false
             }
@@ -45,10 +44,7 @@ class BurgerBuilder extends Component{
 
         })
     }        
-
-    componentWillReceiveProps(){
-        this.updateIsPurchasable(this.props.ingredients);
-    }
+    
 
     updateIsPurchasable(ingredients){
         const sum = Object.keys(ingredients).map(igKey => {
@@ -56,8 +52,7 @@ class BurgerBuilder extends Component{
         }).reduce((total,el) => {
                 return total+el;    
             },0);
-         console.log("updateIsPurchasable",ingredients);   
-        this.setState({isPurchasable:sum > 0});      
+         return (sum > 0);
     }    
     
     setIsPurchasingHandler = () => {
@@ -72,27 +67,24 @@ class BurgerBuilder extends Component{
 
        
 
-        let queryParams = [];
-        for(let i in this.props.ingredients){
-            queryParams.push(encodeURIComponent(i)+"="+encodeURIComponent(this.props.ingredients[i]));
-        }
-        queryParams.push('price='+this.props.price);
-        const queryString = queryParams.join('&');
+        // let queryParams = [];
+        // for(let i in this.props.ingredients){
+        //     queryParams.push(encodeURIComponent(i)+"="+encodeURIComponent(this.props.ingredients[i]));
+        // }
+        // queryParams.push('price='+this.props.price);
+        // const queryString = queryParams.join('&');
 
-        this.props.history.push({pathname:'/checkout' , search:"?"+queryString} );
+        this.props.history.push({pathname:'/checkout'} );
         
         
     }
 
     addIngredientHandler = (type,count=1) => {
-        console.log("Inside addIngredientHandler ",type, count);
-        this.props.onAddIngredients(type,count);
-        this.updateIsPurchasable(this.props.ingredients);
+        this.props.onAddIngredients(type,count);   
     }   
     
     removeIngredientHandler = (type) => {
-        this.onRemoveIngredient(type);
-        this.updateIsPurchasable(this.props.ingredients);
+        this.props.onRemoveIngredient(type);
     }
 
     render() {
@@ -114,7 +106,7 @@ class BurgerBuilder extends Component{
                             ingredientRemoved = {this.removeIngredientHandler} 
                             disableRemove = {disabledInfo}
                             price = {this.props.price}
-                            isPurchasable = {this.props.isPurchasable}
+                            isPurchasable = {this.updateIsPurchasable(this.props.ingredients)}
                             order = {this.setIsPurchasingHandler}/></Aux>;
 
             orderSummary = <OrderSummary ingredients = {this.props.ingredients}

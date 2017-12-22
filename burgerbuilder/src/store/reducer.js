@@ -22,18 +22,28 @@ const reducer = (state=initialState , action) => {
     switch(action.type){
         case actionTypes.ADD_INGREDIENT:
             if(action.count >= 1){
-                const oldIngredientCount = state.ingredients[action.igKey];
-                const updateCount = oldIngredientCount+action.count;
-                const oldPrice = state.price;
-                const updatedPrice = oldPrice + (action.count*INGREDIENT_PRICES[action.igKey]);
-                const updatedIngredients = {...state.ingredients}
-                updatedIngredients[action.igKey] = updateCount;
+                // const oldIngredientCount = state.ingredients[action.igKey];
+                // const updateCount = oldIngredientCount+action.count;
+                // const oldPrice = state.price;
+                // const updatedPrice = oldPrice + (action.count*INGREDIENT_PRICES[action.igKey]);
+                // const updatedIngredients = {...state.ingredients}
+                // updatedIngredients[action.igKey] = updateCount;
+
+                // return {
+                //     ...state,
+                //     ingredients:updatedIngredients,
+                //     price:updatedPrice
+                // }
 
                 return {
                     ...state,
-                    ingredients:updatedIngredients,
-                    price:updatedPrice
+                    ingredients:{
+                        ...state.ingredients,
+                        [action.igKey]:state.ingredients[action.igKey]+action.count
+                    },
+                    price : state.price+(action.count*INGREDIENT_PRICES[action.igKey])
                 }
+
             }
             return state;
 
