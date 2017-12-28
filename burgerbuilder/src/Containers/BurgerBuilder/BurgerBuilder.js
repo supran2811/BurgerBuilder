@@ -2,7 +2,7 @@ import React , {Component} from 'react';
 import { connect } from 'react-redux';
 
 
-import * as actionTypes from '../../store/actions';
+import * as actions from '../../store/actions/index';
 
 
 import OrderSummary from '../../Components/Burger/OrderSummary/OrderSummary';
@@ -24,25 +24,7 @@ class BurgerBuilder extends Component{
 
 
     componentDidMount() {
-        axios.get("ingredients.json").then(response =>{
-            //this.setState({ingredients:response.data});
-            if(response.data != null){
-                let igKeys = Object.keys(response.data);
-                console.log(igKeys);
-                for(const igKey of igKeys){
-                       console.log("Ing keys ",igKey);
-                      this.addIngredientHandler(igKey,response.data[igKey]);  
-                }
-              //  this.updateIsPurchasable(response.data);
-            }
-            else{
-
-            }
-            
-        })
-        .catch(errr => {
-
-        })
+       this.props.downloadIngredients();
     }        
     
 
@@ -56,6 +38,7 @@ class BurgerBuilder extends Component{
     }    
     
     setIsPurchasingHandler = () => {
+        
         this.setState({isPurchasing:true});
     }
 
@@ -64,18 +47,8 @@ class BurgerBuilder extends Component{
     }
 
     setPurchaseContinueHandler = () => {
-
-       
-
-        // let queryParams = [];
-        // for(let i in this.props.ingredients){
-        //     queryParams.push(encodeURIComponent(i)+"="+encodeURIComponent(this.props.ingredients[i]));
-        // }
-        // queryParams.push('price='+this.props.price);
-        // const queryString = queryParams.join('&');
-
+        this.props.initPurchase();
         this.props.history.push({pathname:'/checkout'} );
-        
         
     }
 
@@ -99,21 +72,23 @@ class BurgerBuilder extends Component{
 
         let burger = <Spinner />
         let orderSummary = null;
+    
+       
         if(this.props.ingredients){
-
-            burger =  <Aux><Burger ingredients={this.props.ingredients}/>
-                      <BuildControls ingredientAdded = {this.addIngredientHandler}
-                            ingredientRemoved = {this.removeIngredientHandler} 
-                            disableRemove = {disabledInfo}
-                            price = {this.props.price}
-                            isPurchasable = {this.updateIsPurchasable(this.props.ingredients)}
-                            order = {this.setIsPurchasingHandler}/></Aux>;
-
-            orderSummary = <OrderSummary ingredients = {this.props.ingredients}
-            price = {this.props.price}
-            cancelPurchase = {this.setCancelIsPurchasingHandler}
-            continuePurchase = {this.setPurchaseContinueHandler}/>;
+        burger =  <Aux><Burger ingredients={this.props.ingredients}/>
+                    <BuildControls ingredientAdded = {this.addIngredientHandler}
+                        ingredientRemoved = {this.removeIngredientHandler} 
+                        disableRemove = {disabledInfo}
+                        price = {this.props.price}
+                        isPurchasable = {() => this.updateIsPurchasable(this.props.ingredients)}
+                        order = {this.setIsPurchasingHandler}/></Aux>;
+       
+                orderSummary = <OrderSummary ingredients = {this.props.ingredients}
+                price = {this.props.price}
+                cancelPurchase = {this.setCancelIsPurchasingHandler}
+                continuePurchase = {this.setPurchaseContinueHandler}/>;
         }
+        
 
         if(this.state.loading)
         {
@@ -133,15 +108,17 @@ class BurgerBuilder extends Component{
 
 const mapStateToProps = state => (
     {
-        ingredients:state.ingredients,
-        price:state.price
+        ingredients:state.burger.ingredients,
+        price:state.burger.price
     }
 );
 
 const mapDispatchToProps = dispatch => (
     {
-        onAddIngredients : (type,count) => dispatch({type:actionTypes.ADD_INGREDIENT , igKey:type , count:count}),
-        onRemoveIngredient : (type) => dispatch({type:actionTypes.REMOVE_INGREDIENT,igKey:type})
+        onAddIngredients : (type,count) => dispatch(actions.addIngredient(type,count)),
+        onRemoveIngredient : (type) => dispatch(actions.deleteIngredient(type)),
+        downloadIngredients : () => dispatch(actions.downloadIngredients()),
+        initPurchase : () => dispatch(actions.purchaseInit())
     }
 )
 
