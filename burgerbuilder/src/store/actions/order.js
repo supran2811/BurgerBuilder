@@ -28,11 +28,11 @@ export const purchaseInit = () => (
 );
 
 export const purchase = (order) => (
-    dispatch => {
+    (dispatch,getState) => {
         
         dispatch(purchaseStart());
 
-        axios.post("orders.json",order).then(response => {
+        axios.post("orders.json?auth="+getState().auth.token,order).then(response => {
             console.log("[OrdersAction]",response.data);
             dispatch(purchaseSucess(response.data.name,order));
          })
@@ -57,10 +57,10 @@ export const initDownloadOrders = () => (
 );
 
 export const downloadOrders = () => (
-    dispatch => {
+    (dispatch,getState) => {
         dispatch(initDownloadOrders());
-        
-        axios.get('orders.json').then(response =>{
+        console.log("State ",);
+        axios.get('orders.json?auth='+getState().auth.token ).then(response =>{
             if(response != null){
                let orders  = []; 
                console.log(response.data);
@@ -72,6 +72,8 @@ export const downloadOrders = () => (
                }
                dispatch(setOrders(orders));
             }
+       }).catch(error => {
+           console.log(error);
        })
     }
 );

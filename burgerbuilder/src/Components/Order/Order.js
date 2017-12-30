@@ -2,6 +2,7 @@
 import React from 'react';
 import classes from './Order.css';
 
+
 const order = (props) => {
     console.log(props.ingredients);
     const ingredients = props.ingredients? Object.keys(props.ingredients).map((igKey) =>{

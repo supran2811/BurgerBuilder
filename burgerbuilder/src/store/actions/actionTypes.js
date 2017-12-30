@@ -11,3 +11,8 @@ export const PURCHASE_INIT   = "PURCHASE_INIT";
 export const FETCH_ORDER_INIT = "FETCH_ORDER_INIT";
 export const FETCH_ORDERS = "FETCH_ORDERS";
 export const SET_ORDERS   = "SET_ORDERS";
+
+export const AUTH_START = "AUTH_START";
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAIL = "AUTH_FAIL";
+export const LOGOUT = "LOGOUT"

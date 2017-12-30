@@ -80,7 +80,7 @@ class BurgerBuilder extends Component{
                         ingredientRemoved = {this.removeIngredientHandler} 
                         disableRemove = {disabledInfo}
                         price = {this.props.price}
-                        isPurchasable = {() => this.updateIsPurchasable(this.props.ingredients)}
+                        isPurchasable = {this.updateIsPurchasable(this.props.ingredients)}
                         order = {this.setIsPurchasingHandler}/></Aux>;
        
                 orderSummary = <OrderSummary ingredients = {this.props.ingredients}
