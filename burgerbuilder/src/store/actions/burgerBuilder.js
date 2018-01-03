@@ -22,9 +22,22 @@ export const resetBurgerState = () => {
         }
 }
 
+export const resetIsPurchasing = () => {
+        return {
+                type:actionTypes.RESET_IS_PURCHASING
+        }
+}
+
+export const setPurchasing = () => {
+        return {
+                type:actionTypes.SET_PURCHASING
+        }
+}
+
 export const downloadIngredients = () => (
 
         dispatch => {
+                dispatch(resetBurgerState());
                 axios.get("ingredients.json").then(response =>{
                         if(response.data != null){
                             let igKeys = Object.keys(response.data);

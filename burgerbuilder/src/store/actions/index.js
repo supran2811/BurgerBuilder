@@ -1,10 +1,15 @@
 export { addIngredient , 
          deleteIngredient ,
          downloadIngredients ,
-         resetBurgerState } from './burgerBuilder'
+         resetBurgerState,
+            resetIsPurchasing ,
+            setPurchasing} from './burgerBuilder'
 
 export { purchase , 
          purchaseInit , 
          downloadOrders} from './order'
 
-export {signIn , signUp} from './auth';
+export {signIn , 
+            signUp , 
+            logout ,  
+            isUserAuthenticated} from './auth';

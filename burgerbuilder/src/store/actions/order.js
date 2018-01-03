@@ -60,7 +60,8 @@ export const downloadOrders = () => (
     (dispatch,getState) => {
         dispatch(initDownloadOrders());
         console.log("State ",);
-        axios.get('orders.json?auth='+getState().auth.token ).then(response =>{
+        const queryParams = "auth="+getState().auth.token+'&orderBy="userid"&equalTo="'+getState().auth.userid+'"';
+        axios.get('orders.json?'+queryParams ).then(response =>{
             if(response != null){
                let orders  = []; 
                console.log(response.data);

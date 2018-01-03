@@ -18,12 +18,13 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 class BurgerBuilder extends Component{
 
     state = {
-                isPurchasing:false,
+               
                 loading:false
             }
 
 
     componentDidMount() {
+        console.log("[componentDidMount]",this.props);
        this.props.downloadIngredients();
     }        
     
@@ -38,12 +39,15 @@ class BurgerBuilder extends Component{
     }    
     
     setIsPurchasingHandler = () => {
-        
-        this.setState({isPurchasing:true});
+        this.props.setPurchasing();
+        this.props.initPurchase();
+        if(!this.props.isAuthenticated){
+            this.props.history.push({pathname:'/auth' , search:"?signup"});
+        }
     }
 
     setCancelIsPurchasingHandler = () => {
-        this.setState({isPurchasing:false});
+        this.props.resetPurchasing();
     }
 
     setPurchaseContinueHandler = () => {
@@ -76,7 +80,9 @@ class BurgerBuilder extends Component{
        
         if(this.props.ingredients){
         burger =  <Aux><Burger ingredients={this.props.ingredients}/>
-                    <BuildControls ingredientAdded = {this.addIngredientHandler}
+                    <BuildControls 
+                        isAuthenticated = {this.props.isAuthenticated}
+                        ingredientAdded = {this.addIngredientHandler}
                         ingredientRemoved = {this.removeIngredientHandler} 
                         disableRemove = {disabledInfo}
                         price = {this.props.price}
@@ -97,7 +103,7 @@ class BurgerBuilder extends Component{
 
         return (
         <Aux>
-            <Modal showLoading = {this.state.loading} show={this.state.isPurchasing} modalClosed={this.setCancelIsPurchasingHandler}>
+            <Modal showLoading = {this.state.loading} show={this.props.isPurchasing} modalClosed={this.setCancelIsPurchasingHandler}>
                 {orderSummary}
             </Modal>
                 {burger}
@@ -109,7 +115,9 @@ class BurgerBuilder extends Component{
 const mapStateToProps = state => (
     {
         ingredients:state.burger.ingredients,
-        price:state.burger.price
+        price:state.burger.price,
+        isPurchasing:state.burger.isPurchasing,
+        isAuthenticated:state.auth.token !== null
     }
 );
 
@@ -118,7 +126,9 @@ const mapDispatchToProps = dispatch => (
         onAddIngredients : (type,count) => dispatch(actions.addIngredient(type,count)),
         onRemoveIngredient : (type) => dispatch(actions.deleteIngredient(type)),
         downloadIngredients : () => dispatch(actions.downloadIngredients()),
-        initPurchase : () => dispatch(actions.purchaseInit())
+        initPurchase : () => dispatch(actions.purchaseInit()),
+        resetPurchasing: () => dispatch(actions.resetIsPurchasing()),
+        setPurchasing: () => dispatch(actions.setPurchasing())
     }
 )
 

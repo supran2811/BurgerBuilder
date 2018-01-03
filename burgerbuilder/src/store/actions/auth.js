@@ -34,11 +34,14 @@ export const signUp = (email,password) => {
     }
 }
 
-export const logout = () => (
-    {
+export const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiryDate');
+    localStorage.removeItem('userid');
+    return {
         type:actionTypes.LOGOUT
     }
-);
+};
 
 export const checkTimeOutToLogout = timeout => (
     dispatch => {
@@ -65,6 +68,13 @@ const auth = (email,password,isSignUp) => {
         axios.post(authUrl , authData)
                 .then(response => {
                     console.log(response.data);
+                    localStorage.setItem('token',response.data.idToken);
+                    localStorage.setItem('userid',response.data.localId);
+
+                    const expiryDate  = new Date((new Date()).getTime() + (response.data.expiresIn*1000)); 
+
+                    localStorage.setItem('expiryDate', expiryDate);
+
                     dispatch(authSuccess(response.data.idToken ,response.data.localId));
                     dispatch(checkTimeOutToLogout(response.data.expiresIn));
                 })
@@ -75,3 +85,31 @@ const auth = (email,password,isSignUp) => {
 
     }
 }
+
+export const isUserAuthenticated = () => (
+    dispatch => {
+        const token = localStorage.getItem('token');
+        if(!token){
+            dispatch(logout());
+        }
+        else{
+            const userid = localStorage.getItem('userid');
+            const expiryDate = new Date(localStorage.getItem('expiryDate'));
+
+            const today = new Date();
+
+            if(expiryDate <= today){
+                dispatch(logout());
+            }
+            else{
+                
+                dispatch(authSuccess(token,userid));
+
+                const timeout = (expiryDate.getTime() - today.getTime())/1000;
+                
+                dispatch(checkTimeOutToLogout(timeout));
+
+            }
+        }
+    }
+);

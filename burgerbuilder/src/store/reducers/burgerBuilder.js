@@ -10,7 +10,8 @@ const INGREDIENT_PRICES = {
 
 const initialState = {
     ingredients:null,
-    price:4
+    price:4,
+    isPurchasing:false
 }
 
 const addIngredients = (state,action) => {
@@ -40,9 +41,18 @@ const removeIngredient = (state,action) => {
 const resetBurgerState = () => (
     {
         ingredients:null,
-        price:4
+        price:4,
+        isPurchasing:false
     }
 )
+
+const resetIsPurchasing = (state,action) => (
+    updateObject(state,{isPurchasing:false})
+);
+
+const setIsPurchasing = (state,action) => (
+    updateObject(state,{isPurchasing:true})
+);
 
 const reducer = (state=initialState , action) => {
 
@@ -50,6 +60,8 @@ const reducer = (state=initialState , action) => {
         case actionTypes.ADD_INGREDIENT: return addIngredients(state,action);
         case actionTypes.REMOVE_INGREDIENT: return removeIngredient(state,action);
         case actionTypes.RESET_BURGER_STATE: return resetBurgerState();
+        case actionTypes.RESET_IS_PURCHASING:return resetIsPurchasing(state);
+        case actionTypes.SET_PURCHASING:return setIsPurchasing(state);
         default:
             return state;
     }

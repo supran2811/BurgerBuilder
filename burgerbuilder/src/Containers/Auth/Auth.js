@@ -6,6 +6,7 @@ import Input from '../../Components/UI/Input/Input';
 import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../Components/UI/Spinner/Spinner';
+import { Redirect } from 'react-router-dom';
 
 class Auth extends Component {
     
@@ -129,8 +130,16 @@ class Auth extends Component {
         if(this.props.error){
             errorMessage = <div style = {{ color:'red'}} >{this.props.error}</div>
         }
+
+        let auth  = null;
+        if(this.props.isAuthenticated){
+            auth = this.props.isPurchasing ?  <Redirect to = "/checkout" />   : <Redirect to = "/"/>
+        }
+
+
         return (
             <div className = {classes.Auth}>
+                {auth}
                 {errorMessage}
                 <form onSubmit = {this.submitHandler}>
                     {form}
@@ -144,14 +153,16 @@ class Auth extends Component {
 const mapDispatchToProps = dispatch => (
     {
         onSignIn: (email,password) => dispatch(actions.signIn(email,password)),
-        onSignUp: (email,password) => dispatch(actions.signUp(email,password)) 
+        onSignUp: (email,password) => dispatch(actions.signUp(email,password))
     }
 );
 
 const mapStateToProps = state => (
     {
         loading:state.auth.loading,
-        error:state.auth.error
+        error:state.auth.error,
+        isAuthenticated:state.auth.token !== null,
+        isPurchasing:state.burger.isPurchasing
     }
 )
 
