@@ -67,7 +67,7 @@ const auth = (email,password,isSignUp) => {
 
         axios.post(authUrl , authData)
                 .then(response => {
-                    console.log(response.data);
+                    
                     localStorage.setItem('token',response.data.idToken);
                     localStorage.setItem('userid',response.data.localId);
 

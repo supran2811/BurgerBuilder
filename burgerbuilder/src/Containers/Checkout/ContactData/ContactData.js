@@ -9,6 +9,7 @@ import Input from '../../../Components/UI/Input/Input';
 import {purchase} from '../../../store/actions/index';
 import axios from '../../../axios-order';
 import withErrorHander from '../../../hoc/withErrorHandler/withErrorHandler';
+import {updateObject,checkValidity} from '../../../shared/utility';
 
 class ContactData extends Component{
     state = {
@@ -120,31 +121,14 @@ class ContactData extends Component{
 
     }
 
-    checkValidity(rules,value){
-        let isValid = true;
-        if(rules.required){
-            isValid = isValid && value.trim() !== "";
-        }
-
-        if(rules.maxlength){
-            isValid = isValid && value.trim().length <= rules.maxlength;
-        }
-
-        if(rules.minlength){
-            isValid = isValid && value.trim().length >= rules.minlength;
-        }
-        console.log(isValid,rules);
-
-        return isValid;
-    }
-
+   
     inputChangedHandler = (event,id) => {
-        const updatedOrderForm = { ...this.state.orderForm};
-        const updatedOrderFormElement = {...updatedOrderForm[id]};
-        updatedOrderFormElement.value = event.target.value;
-        updatedOrderFormElement.valid = this.checkValidity(updatedOrderFormElement.validation , updatedOrderFormElement.value);
-        updatedOrderFormElement.touched = true;
-        updatedOrderForm[id] = updatedOrderFormElement;
+       
+        const isValid = checkValidity(this.state.orderForm[id].validation , event.target.value);
+        const updatedProperties = {value : event.target.value , valid : isValid,touched : true }
+        const updatedOrderFormElement = updateObject(this.state.orderForm[id] , updatedProperties);
+        const updatedOrderForm = updateObject(this.state.orderForm , {[id]:updatedOrderFormElement} )
+
         let formIsValid = true;
         for(let key in updatedOrderForm){
             formIsValid = formIsValid && updatedOrderForm[key].valid;

@@ -7,6 +7,8 @@ import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 import { Redirect } from 'react-router-dom';
+import {updateObject,checkValidity} from '../../shared/utility';
+
 
 class Auth extends Component {
     
@@ -45,34 +47,16 @@ class Auth extends Component {
         },
         type:"signup"
     }    
-    checkValidity(rules,value){
-        let isValid = true;
-        if(rules.required){
-            isValid = isValid && value.trim() !== "";
-        }
-
-        if(rules.maxlength){
-            isValid = isValid && value.trim().length <= rules.maxlength;
-        }
-
-        if(rules.minlength){
-            isValid = isValid && value.trim().length >= rules.minlength;
-        }
-        console.log(isValid,rules);
-
-        return isValid;
-    }
+   
 
     inputChangedHandler = (event,id) => {
-        const updatedControls = {
-            ...this.state.controls,
-            [id]:{
-                ...this.state.controls[id],
-                value:event.target.value,
-                valid:this.checkValidity(this.state.controls[id].validation,event.target.value),
-                touched:true
-            }
-        };
+
+
+        const updatedControls = updateObject(this.state.controls , {[id] : updateObject(this.state.controls[id] , {
+            value:event.target.value,
+            valid:checkValidity(this.state.controls[id].validation,event.target.value),
+            touched:true 
+        })});
 
         this.setState({controls:updatedControls});
     }
@@ -91,14 +75,14 @@ class Auth extends Component {
     }
 
     componentDidMount(){
-        console.log("[componentWillMount]",this.props.location.search.substr(1));
+        
         const type = this.props.location.search.substr(1);
         if(type !== this.state.type){
             this.setState({type:type});
         }
     }
     componentDidUpdate(){
-        console.log("[componentWillUpdate]",this.props.location.search.substr(1));
+        
         const type = this.props.location.search.substr(1);
         if(type !== this.state.type){
             this.setState({type:type});

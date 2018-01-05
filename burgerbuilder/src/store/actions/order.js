@@ -33,7 +33,7 @@ export const purchase = (order) => (
         dispatch(purchaseStart());
 
         axios.post("orders.json?auth="+getState().auth.token,order).then(response => {
-            console.log("[OrdersAction]",response.data);
+           
             dispatch(purchaseSucess(response.data.name,order));
          })
          .catch(errr => {
@@ -59,12 +59,12 @@ export const initDownloadOrders = () => (
 export const downloadOrders = () => (
     (dispatch,getState) => {
         dispatch(initDownloadOrders());
-        console.log("State ",);
+    
         const queryParams = "auth="+getState().auth.token+'&orderBy="userid"&equalTo="'+getState().auth.userid+'"';
         axios.get('orders.json?'+queryParams ).then(response =>{
             if(response != null){
                let orders  = []; 
-               console.log(response.data);
+       
                for(let key in response.data){
                    orders.push({
                        ...response.data[key],

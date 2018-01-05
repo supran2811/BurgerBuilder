@@ -15,7 +15,7 @@ import Spinner from '../../Components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 
-class BurgerBuilder extends Component{
+export class BurgerBuilder extends Component{
 
     state = {
                
@@ -24,7 +24,7 @@ class BurgerBuilder extends Component{
 
 
     componentDidMount() {
-        console.log("[componentDidMount]",this.props);
+        
        this.props.downloadIngredients();
     }        
     
