@@ -12,4 +12,9 @@ export { purchase ,
 export {signIn , 
             signUp , 
             logout ,  
-            isUserAuthenticated} from './auth';
+            authStart,
+            authSuccess,
+            authFail,
+            checkTimeOutToLogout,
+            isUserAuthenticated,
+            logoutSucess} from './auth';

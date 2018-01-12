@@ -18,3 +18,6 @@ export const AUTH_START = "AUTH_START";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAIL = "AUTH_FAIL";
 export const LOGOUT = "LOGOUT"
+export const DO_LOGOUT  = "DO_LOGOUT";
+export const DO_LOGIN  = "DO_LOGIN";
+export const AUTH_CHECK_TIMEOUT = "AUTH_CHECK_TIMEOUT";
