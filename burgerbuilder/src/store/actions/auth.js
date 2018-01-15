@@ -61,29 +61,7 @@ const auth = (email,password,isSignUp) => (
 );
 
 export const isUserAuthenticated = () => (
-    dispatch => {
-        const token = localStorage.getItem('token');
-        if(!token){
-            dispatch(logout());
-        }
-        else{
-            const userid = localStorage.getItem('userid');
-            const expiryDate = new Date(localStorage.getItem('expiryDate'));
-
-            const today = new Date();
-
-            if(expiryDate <= today){
-                dispatch(logout());
-            }
-            else{
-                
-                dispatch(authSuccess(token,userid));
-
-                const timeout = (expiryDate.getTime() - today.getTime())/1000;
-                
-                dispatch(checkTimeOutToLogout(timeout));
-
-            }
-        }
+    {
+        type:actionTypes.DO_CHECK_AUTH
     }
 );

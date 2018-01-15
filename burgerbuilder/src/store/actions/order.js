@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../axios-order';
+
 
 export const purchaseSucess = (id,orderData) => (
     {
@@ -28,18 +28,9 @@ export const purchaseInit = () => (
 );
 
 export const purchase = (order) => (
-    (dispatch,getState) => {
-        
-        dispatch(purchaseStart());
-
-        axios.post("orders.json?auth="+getState().auth.token,order).then(response => {
-           
-            dispatch(purchaseSucess(response.data.name,order));
-         })
-         .catch(errr => {
-             console.log(errr);
-             dispatch(purchaseFail());
-         })
+    {
+        type:actionTypes.DO_PURCHASE_ORDER,
+        order:order
     }
 );
 
@@ -57,24 +48,7 @@ export const initDownloadOrders = () => (
 );
 
 export const downloadOrders = () => (
-    (dispatch,getState) => {
-        dispatch(initDownloadOrders());
-    
-        const queryParams = "auth="+getState().auth.token+'&orderBy="userid"&equalTo="'+getState().auth.userid+'"';
-        axios.get('orders.json?'+queryParams ).then(response =>{
-            if(response != null){
-               let orders  = []; 
-       
-               for(let key in response.data){
-                   orders.push({
-                       ...response.data[key],
-                       id:key
-                   });
-               }
-               dispatch(setOrders(orders));
-            }
-       }).catch(error => {
-           console.log(error);
-       })
+    {
+        type:actionTypes.DO_DOWNLOAD_ORDERS
     }
 );

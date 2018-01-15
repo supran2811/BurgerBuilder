@@ -11,7 +11,7 @@ import App from './App';
 import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
-import { watchAuth } from './store/sagas';
+import { watchAuth , watchBurgerBuild , watchOrder } from './store/sagas';
 
 const reducers = combineReducers({
         burger:burgerBuilderReducer,
@@ -28,6 +28,8 @@ const store = createStore(reducers,
                                 applyMiddleware(thunk,sagaMiddleware)
                         ));
 sagaMiddleware.run(watchAuth);
+sagaMiddleware.run(watchBurgerBuild);
+sagaMiddleware.run(watchOrder);
 
 const app = (
     <Provider store={store}>

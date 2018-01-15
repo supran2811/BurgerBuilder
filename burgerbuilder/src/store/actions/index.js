@@ -7,7 +7,12 @@ export { addIngredient ,
 
 export { purchase , 
          purchaseInit , 
-         downloadOrders} from './order'
+         downloadOrders,
+          purchaseStart,
+          purchaseSucess,
+        purchaseFail,
+      setOrders,
+      initDownloadOrders} from './order'
 
 export {signIn , 
             signUp , 

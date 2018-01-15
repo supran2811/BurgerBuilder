@@ -6,6 +6,7 @@ import * as actions from '../actions';
 
 
 
+
 export function* logoutSaga(action) {
     yield localStorage.removeItem('token');
     yield localStorage.removeItem('expiryDate');
@@ -48,4 +49,31 @@ export function* doAuthenticateSaga(action) {
         yield put(actions.authFail(error.response.data.error.message));
      }; 
     
+}
+
+export function* isUserAuthenticated(action){
+        const token = yield localStorage.getItem('token');
+        if(!token){
+           // dispatch(logout());
+           yield put(actions.logout());
+        }
+        else{
+            const userid = yield localStorage.getItem('userid');
+            const expiryDate =yield  new Date(localStorage.getItem('expiryDate'));
+
+            const today =yield  new Date();
+
+            if(expiryDate <= today){
+                yield  put(actions.logout());
+            }
+            else{
+                
+                yield put(actions.authSuccess(token,userid));
+
+                const timeout = (expiryDate.getTime() - today.getTime())/1000;
+                
+                yield put(actions.checkTimeOutToLogout(timeout));
+
+            }
+        }
 }
